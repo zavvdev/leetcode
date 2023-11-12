@@ -16,10 +16,6 @@ Given a roman numeral, convert it to an integer.
           MCMXCIV - 1994.
           Explanation: M = 1000, CM = 900, XC = 90 and IV = 4.")
 
-
-
-
-
 (defn roman-to-int [roman-string]
   (let [symbols-map {"I" 1 "V" 5 "X" 10 "L" 50
                      "C" 100 "D" 500 "M" 1000}
