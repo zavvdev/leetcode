@@ -46,19 +46,34 @@ stop 7, then take the second bus to the bus stop 6.")
               (swap! result conj index))
             (recur (inc index)))))))
 
+  (defn get-path [start_index prev_path]
+    (loop [index 0]
+      (if (= index (count routes))
+        prev_path
+        (do
+          (when (and
+                 (not= index start_index)
+                 (intersects? 
+                  (get routes index) 
+                  (get routes start_index))))))))
+
   (let [source_index (find-route-index source)
         target_index (find-route-index target)]
-    (if (or (= source_index -1) (= target_index -1))
-      -1
-      (if (= source_index target_index)
-        1
-        (let [source_intersection (get-intersections source_index)
-              target_itersection (get-intersections target_index)]
-          (if (intersects? source_intersection target_itersection)
-            (+
-             (count (get-intersections source_index))
-             (count (get-intersections target_index)))
-            -1))))))
+    (cond 
+      (or (= source_index -1) (= target_index -1)) -1
+      (= source_index target_index) 1
+      (and
+       (= (count routes) 2)
+       (intersects?
+        (get routes source_index)
+        (get routes target_index))) 2
+      :else (let [source_intersection (get-intersections source_index)
+                  target_itersection (get-intersections target_index)]
+              (if (intersects? source_intersection target_itersection)
+                (+
+                 (count source_intersection)
+                 (count target_itersection))
+                -1)))))
 
 (bus-routes [[1 2 7] [3 6 7]] 1 6)
 
@@ -83,4 +98,3 @@ stop 7, then take the second bus to the bus stop 6.")
              [65 23 11]
              [87 41 59]
              [8 45 39]] 2 45) ;; should be 3. Need to check for intersection with subintersections
-
