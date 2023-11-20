@@ -19,50 +19,49 @@ Output: 2
 Explanation: The best strategy is take the first bus to the bus
 stop 7, then take the second bus to the bus stop 6.")
 
-(defn bus-routes [routes source target]
+(defn find-route-index-by-source [source routes]
+  (loop [index 0]
+    (if (= index (count routes))
+      -1
+      (if (contains? (set (get routes index)) source)
+        index
+        (recur (inc index))))))
 
-  (defn find-route-index [place]
+(defn intersects? [route_one route_two]
+  (boolean (some (set route_one) route_two)))
+
+(defn get-intersections [route_index routes]
+  (let [result (atom [])]
     (loop [index 0]
       (if (= index (count routes))
-        -1
-        (if (contains? (set (get routes index)) place)
-          index
-          (recur (inc index))))))
+        @result
+        (do
+          (when (and
+                 (not= index route_index)
+                 (intersects?
+                  (get routes route_index)
+                  (get routes index)))
+            (swap! result conj index))
+          (recur (inc index)))))))
 
-  (defn intersects? [route_one route_two]
-    (boolean (some (set route_one) route_two)))
+(defn get-each-route-intersections [routes intersection-builder]
+  (let [result (atom [])]
+    (loop [index 0]
+      (if (= index (count routes))
+        @result
+        (do
+          (swap! result conj (intersection-builder index routes))
+          (recur (inc index)))))))
 
-  (defn get-intersections [route_index]
-    (let [result (atom [])]
-      (loop [index 0]
-        (if (= index (count routes))
-          @result
-          (do
-            (when (and
-                   (not= index route_index)
-                   (intersects?
-                    (get routes route_index)
-                    (get routes index)))
-              (swap! result conj index))
-            (recur (inc index)))))))
-  
-  (defn get-each-route-intersections []
-    (let [result (atom [])]
-      (loop [index 0]
-        (if (= index (count routes))
-          @result
-          (do
-            (swap! result conj (get-intersections index))
-            (recur (inc index)))))))
-
-  (let [source_index (find-route-index source)
-        target_index (find-route-index target)
-        source_intersections (get-intersections source_index)]
+(defn bus-routes [routes source target]
+  (let [source_index (find-route-index-by-source source routes)
+        target_index (find-route-index-by-source target routes)
+        source_intersections (get-intersections source_index routes)]
     (cond 
       (or (= source_index -1) (= target_index -1)) -1
       (= source_index target_index) 1
       (contains? (set source_intersections) target_index) 2
-      :else (let [target_itersections (get-intersections target_index)]
+      :else (let [target_itersections (get-intersections target_index routes)]
               (if (intersects? source_intersections target_itersections)
                 (+
                  (count source_intersections)
@@ -110,30 +109,7 @@ Each route intersections (last function call):
 ]
 ")
 
-(defn get-int [route_index routes]
-  (let [result (atom [])]
-    (loop [index 0]
-      (if (= index (count routes))
-        @result
-        (do
-          (when (and
-                 (not= index route_index)
-                 (intersects?
-                  (get routes route_index)
-                  (get routes index)))
-            (swap! result conj index))
-          (recur (inc index)))))))
-
-(defn get-each [routes]
-  (let [result (atom [])]
-    (loop [index 0]
-      (if (= index (count routes))
-        @result
-        (do
-          (swap! result conj (get-int index routes))
-          (recur (inc index)))))))
-
-(get-each [[1002 98 97]
+(get-each-route-intersections [[1002 98 97]
            [1 2 7]
            [1002 6 7 100]
            [100 1002 38]
@@ -141,7 +117,7 @@ Each route intersections (last function call):
            [4023 38 87]
            [87 45 59]
            [8 45 39]
-           [101 102 103]])
+           [101 102 103]] get-intersections)
 
 
 [7 [6 [5 [3 [0 2 5] 6 [5 7]]] [7]]]
