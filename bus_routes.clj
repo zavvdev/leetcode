@@ -53,7 +53,22 @@ stop 7, then take the second bus to the bus stop 6.")
           (swap! result conj (intersection-builder index routes))
           (recur (inc index)))))))
 
-(defn bus-routes [routes source target]
+(defn get-next-possible-routes [args]
+  (let [{int-to-jump :intersection-to-jump
+         cur-route-idx :current-route-index
+         target-route-idx :target-route-index
+         target-route-int :target-route-intersections
+         past-idxs :past-indexes} args
+        filtered-int-to-jump (filter 
+                            #(not (contains? (set (conj past-idxs cur-route-idx)) %))
+                            int-to-jump)]
+    (when (or (or
+             (contains? (set filtered-int-to-jump) target-route-idx)
+             (intersects? filtered-int-to-jump target-route-int))
+            (not= (count filtered-int-to-jump) 0))
+      filtered-int-to-jump)))
+
+(defn bus-routes [routes source target] 
   (let [source_index (find-route-index-by-source source routes)
         target_index (find-route-index-by-source target routes)
         source_intersections (get-intersections source_index routes)]
@@ -84,6 +99,18 @@ stop 7, then take the second bus to the bus stop 6.")
              [65 23 11]
              [87 41 59]
              [8 45 39]] 2 45)
+
+;; FAILED
+
+(get-each-route-intersections [[1002 98 97]
+                               [1 2 7]
+                               [1002 6 7 100]
+                               [100 1002 38]
+                               [65 23 11]
+                               [4023 38 87]
+                               [87 45 59]
+                               [8 45 39]
+                               [101 102 103]] get-intersections)
 
 (bus-routes [[1002 98 97]
              [1 2 7]
@@ -123,3 +150,9 @@ Each route intersections (last function call):
 [7 [6 [5 [3 [0 2 5] 6 [5 7]]] [7]]]
 ;; loop over each route intersection and follow indexes until find target. Save each followed index to storage
 ;; and dont follow it again. 
+
+(get-next-possible-routes {:intersection-to-jump [2 3 1]
+                           :current-route-index 1
+                           :target-route-index 9
+                           :target-route-intersections [7 8]
+                           :past-indexes []})
