@@ -56,11 +56,16 @@ stop 7, then take the second bus to the bus stop 6.")
 (defn get-next-possible-routes [args]
   (let [{int-to-jump :intersection-to-jump
          cur-route-idx :current-route-index
+         cur-route-int :current-route-intersections
          target-route-idx :target-route-index
          target-route-int :target-route-intersections
          past-idxs :past-indexes} args
         filtered-int-to-jump (filter 
-                            #(not (contains? (set (conj past-idxs cur-route-idx)) %))
+                            #(not 
+                              (contains?
+                               (set (conj
+                                     (concat past-idxs cur-route-int)
+                                     cur-route-idx)) %))
                             int-to-jump)]
     (when (or (or
              (contains? (set filtered-int-to-jump) target-route-idx)
@@ -102,7 +107,7 @@ stop 7, then take the second bus to the bus stop 6.")
 
 ;; FAILED
 
-(get-each-route-intersections [[1002 98 97]
+(get-each-route-intersections [[1002 98 97 103]
                                [1 2 7]
                                [1002 6 7 100]
                                [100 1002 38]
@@ -153,6 +158,7 @@ Each route intersections (last function call):
 
 (get-next-possible-routes {:intersection-to-jump [2 3 1]
                            :current-route-index 1
+                           :current-route-intersections [2]
                            :target-route-index 9
                            :target-route-intersections [7 8]
                            :past-indexes []})
