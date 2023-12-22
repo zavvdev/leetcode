@@ -16,6 +16,9 @@ Given a roman numeral, convert it to an integer.
           MCMXCIV - 1994.
           Explanation: M = 1000, CM = 900, XC = 90 and IV = 4.")
 
+(ns roman-to-int
+  (:require [clojure.string :as string]))
+
 (defn roman-to-int [roman-string]
   (let [symbols-map {"I" 1 "V" 5 "X" 10 "L" 50
                      "C" 100 "D" 500 "M" 1000}
@@ -26,11 +29,11 @@ Given a roman numeral, convert it to an integer.
                                   "CD" "CCCC"
                                   "CM" "DCCCC"}
         without-specials (reduce-kv
-                          (fn [r k v] (clojure.string/replace r k v))
+                          (fn [r k v] (string/replace r k v))
                           roman-string
                           special-combinations-map)]
     (reduce (fn [r v] (+ r (get symbols-map v))) 0 without-specials)))
 
-(roman-to-int "III")
-(roman-to-int "LVIII")
-(roman-to-int "MCMXCIV")
+(assert (= (roman-to-int "III") 3))
+(assert (= (roman-to-int "LVIII") 58))
+(assert (= (roman-to-int "MCMXCIV") 1994))

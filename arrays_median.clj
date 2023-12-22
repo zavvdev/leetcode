@@ -8,6 +8,8 @@ Input: nums1 = [1,2], nums2 = [3,4]
 Output: 2.50000
 Explanation: merged array = [1,2,3,4] and median is (2 + 3) / 2 = 2.5.")
 
+(ns arrays-median)
+
 (defn get-middle [vec]
   (if (and (>= (count vec) 0) (<= (count vec) 2))
     vec
@@ -25,10 +27,10 @@ Explanation: merged array = [1,2,3,4] and median is (2 + 3) / 2 = 2.5.")
       (get middle 0)
       (/ (+ (get middle 0) (get middle 1)) 2))))
 
-(get-median [1, 2] [3, 4])
-(get-median [1, 3] [2])
-(get-median [1, 3] [])
-(get-median [] [3])
-(get-median [4, 6, 7] [3 8 9])
+(assert (= (get-median [1, 2] [3, 4]) 2.5))
+(assert (= (get-median [1, 3] [2]) 2))
+(assert (= (get-median [1, 3] []) 2))
+(assert (= (get-median [] [3]) 3))
+(assert (= (get-median [4, 6, 7] [3 8 9]) 6.5))
 
 

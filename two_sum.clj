@@ -9,6 +9,8 @@ Example:
 Input: nums = [2,7,11,15], target = 9, Output: [0,1]
 Explanation: Because nums[0] + nums[1] == 9, we return [0, 1]")
 
+(ns two-sum)
+
 (defn two-sum [nums, target]
   (defn get-pair-index [i]
     (let [r (.indexOf nums (- target (get nums i)))]
@@ -26,9 +28,9 @@ Explanation: Because nums[0] + nums[1] == 9, we return [0, 1]")
             (swap! y (fn [&] (get-pair-index i)))
             (recur (inc i))))))))
 
-(two-sum [2, 7, 11, 15] 9)
-(two-sum [3, 2, 4] 6)
-(two-sum [3, 3] 6)
-(two-sum [11, 5] 6)
-(two-sum [1, 2, 3, 4, 10] 7)
-(two-sum [] 42)
+(assert (= (two-sum [2, 7, 11, 15] 9) [0, 1]))
+(assert (= (two-sum [3, 2, 4] 6) [1, 2]))
+(assert (= (two-sum [3, 3] 6) [1, 0]))
+(assert (nil? (two-sum [11, 5] 6)))
+(assert (= (two-sum [1, 2, 3, 4, 10] 7) [2, 3]))
+(assert (nil? (two-sum [] 42)))

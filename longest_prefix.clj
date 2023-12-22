@@ -8,11 +8,14 @@ Example:
 Input: strs = ['flower','flow','flight']
 Output: 'fl'")
 
+(ns longest-prefix
+  (:require [clojure.string :as string]))
+
 (defn get-shortest [words]
   (get (into [] (sort #(compare (count %1) (count %2)) words)) 0))
 
 (defn has-prefix? [words prefix]
-  (= (count (filter #(clojure.string/starts-with? %1 prefix) words))
+  (= (count (filter #(string/starts-with? %1 prefix) words))
      (count words)))
 
 (defn get-longest-prefix [words]
@@ -27,5 +30,5 @@ Output: 'fl'")
               prefix
               (recur (dec i)))))))))
 
-(get-longest-prefix ["flower", "flow", "flight"])
-(get-longest-prefix ["dog", "racecar", "car"])
+(assert (= (get-longest-prefix ["flower", "flow", "flight"]) "fl"))
+(assert (= (get-longest-prefix ["dog", "racecar", "car"]) ""))

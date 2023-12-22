@@ -8,11 +8,14 @@ Output: true
 Explanation: 121 reads as 121 from left
           to right and from right to left.")
 
+(ns palindrome-number
+  (:require [clojure.string :as string]))
+
 (defn palindrome? [x]
   (let [s (str x)]
-    (= s (clojure.string/join (reverse s)))))
+    (= s (string/join (reverse s)))))
 
-(palindrome? 121)
-(palindrome? 5)
-(palindrome? 42)
-(palindrome? -121)
+(assert (= (palindrome? 121) true))
+(assert (= (palindrome? 5) true))
+(assert (= (palindrome? 42) false))
+(assert (= (palindrome? -121) false))
