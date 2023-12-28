@@ -3,7 +3,7 @@
           that the number could represent. Return the answer in any order.
           ")
 
-(ns phone-letters
+(ns phone-letter-combinations
   (:require [clojure.string :as string]))
 
 (defn letter-combinations [digits]
