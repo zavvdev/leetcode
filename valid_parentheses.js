@@ -1,6 +1,8 @@
 /**
- * Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
- * An input string is valid if: 
+ * Given a string s containing just the characters '(', ')', '{', '}', '[' and ']',
+ * determine if the input string is valid.
+ *
+ * An input string is valid if:
  *  Open brackets must be closed by the same type of brackets.
  *  Open brackets must be closed in the correct order.
  *  Every close bracket has a corresponding open bracket of the same type.
@@ -12,11 +14,15 @@
  *  Example 2:
  *    Input: s = "{[}]"
  *    Output: false
+ *
+ *  Constraints:
+ *    1 <= s.length <= 10^4
+ *    s consists of parentheses only "()[]{}"
  */
 
 /**
  * @param {string} s
- * @return {boolean}
+ * @returns {boolean}
  */
 var is_valid_parens = function (s) {
   var s_len = s.length;
@@ -43,3 +49,8 @@ var is_valid_parens = function (s) {
 
   return stack.length === 0;
 };
+
+is_valid_parens("({}[])"); // true
+is_valid_parens("{[}]"); // false
+is_valid_parens("()"); // true
+is_valid_parens("]"); // false
