@@ -12,7 +12,7 @@
  * @param {string} needle
  * @returns {number}
  */
-var str_index_of = function(haystack, needle) {
+var str_index_of = function (haystack, needle) {
   if (haystack.length < needle.length) return -1;
   if (haystack === needle) return 0;
 

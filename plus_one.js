@@ -26,7 +26,7 @@
  * @param {number[]} digits
  * @returns {number[]}
  */
-var plus_one = function(digits) {
+var plus_one = function (digits) {
   if (digits.length === 0) return [1];
   var last = digits[digits.length - 1];
   var sliced = digits.slice(0, -1);

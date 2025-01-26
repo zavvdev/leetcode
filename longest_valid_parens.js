@@ -1,56 +1,4 @@
 /**
- * @param {string} s
- * @returns {{
- *    valid: boolean;
- *    stack: Array<{
- *      char: string;
- *      pos: number;
- *    }>;
- * }}
- */
-var is_valid_parens = function(s) {
-  /**
-   * @type {Array<{
-   *    char: string;
-   *    pos: number
-   * }>}
-   */
-  var stack = [];
-
-  var pairs = {
-    "(": ")",
-    "[": "]",
-    "{": "}",
-  };
-
-  for (let i = 0; i < s.length; i++) {
-    let char = s[i];
-
-    if (char in pairs) {
-      stack.push({
-        char,
-        pos: i,
-      });
-    } else if (stack.length === 0 || pairs[stack.pop()?.char] !== char) {
-      return {
-        valid: false,
-        stack: [
-          {
-            char,
-            pos: i,
-          },
-        ],
-      };
-    }
-  }
-
-  return {
-    valid: stack.length === 0,
-    stack,
-  };
-};
-
-/**
  * Given a string containing just the characters '(' and ')',
  * return the length of the longest valid (well-formed) parentheses substring.
  *
@@ -74,34 +22,46 @@ var is_valid_parens = function(s) {
  * @param {string} s
  * @return {number}
  */
-var longest_valid_parentheses = function(s) {
+var longest_valid_parentheses = function (s) {
   var s_len = s.length;
 
-  if (s_len === 0) return 0;
+  if (s_len === 0 || s_len === 1) return 0;
 
-  var res = is_valid_parens(s);
+  var st = [];
 
-  if (res.valid) return s_len;
+  for (let i = 0; i < s_len; i++) {
+    let c = s[i];
 
-  var mark_invalid = (c, x) => {
-    c[x.pos] = "0";
-    return c;
-  };
+    if (c === "(") {
+      st.push(i);
+    } else {
+      let st_len = st.length;
+      if (st_len === 0 || s[st[st_len - 1]] !== "(") st.push(i);
+      else st.pop();
+    }
+  }
 
-  return Math.max(
-    ...res.stack
-      .reduce(mark_invalid, s.split(""))
-      .join("")
-      .split("0")
-      .map(longest_valid_parentheses),
-  );
+  if (st.length === 0) return s_len;
+  st.push(s_len);
+
+  var df = [];
+
+  for (let i = 0; i < st.length; i++) {
+    if (i === 0 && st[i] !== 0) df.push(st[i]);
+    else df.push(st[i] - (st[i - 1] || 0) - 1);
+  }
+
+  return Math.max(...df);
 };
 
 // Test cases
 
 console.log('"(()" Expect 2:', longest_valid_parentheses("(()"));
 
-console.log('")()())" Expect 4:', longest_valid_parentheses(")()())"));
+console.log(
+  '")()())" Expect 4:',
+  longest_valid_parentheses(")()())"),
+);
 
 console.log('"" Expect 0:', longest_valid_parentheses(""));
 
@@ -110,17 +70,32 @@ console.log(
   longest_valid_parentheses(")()()())()()("),
 );
 
-console.log('"(()())(" Expect 6:', longest_valid_parentheses("(()())("));
+console.log(
+  '"(()())(" Expect 6:',
+  longest_valid_parentheses("(()())("),
+);
 
-console.log('"(()()()(" Expect 6:', longest_valid_parentheses("(()()()("));
+console.log(
+  '"(()()()(" Expect 6:',
+  longest_valid_parentheses("(()()()("),
+);
 
 console.log('"(((()" Expect 2:', longest_valid_parentheses("(((()"));
 
-console.log('"(((()))))" Expect 8:', longest_valid_parentheses("(((()))))"));
+console.log(
+  '"(((()))))" Expect 8:',
+  longest_valid_parentheses("(((()))))"),
+);
 
-console.log('")(((((" Expect 0:', longest_valid_parentheses(")((((("));
+console.log(
+  '")(((((" Expect 0:',
+  longest_valid_parentheses(")((((("),
+);
 
-console.log('")()((((" Expect 2:', longest_valid_parentheses(")()(((("));
+console.log(
+  '")()((((" Expect 2:',
+  longest_valid_parentheses(")()(((("),
+);
 
 console.log(
   '"()()))))()()(" Expect 4:',
@@ -128,3 +103,8 @@ console.log(
 );
 
 console.log('"()(()" Expect 2:', longest_valid_parentheses("()(()"));
+
+console.log(
+  '"))))())()()(()" Expect 4:',
+  longest_valid_parentheses("))))())()()(()"),
+);
