@@ -22,7 +22,7 @@
  * @param {string} s
  * @return {number}
  */
-var longest_valid_parentheses = function (s) {
+var longest_valid_parentheses = function(s) {
   var s_len = s.length;
 
   if (s_len === 0 || s_len === 1) return 0;
@@ -30,9 +30,7 @@ var longest_valid_parentheses = function (s) {
   var st = [];
 
   for (let i = 0; i < s_len; i++) {
-    let c = s[i];
-
-    if (c === "(") {
+    if (s[i] === "(") {
       st.push(i);
     } else {
       let st_len = st.length;
@@ -44,14 +42,9 @@ var longest_valid_parentheses = function (s) {
   if (st.length === 0) return s_len;
   st.push(s_len);
 
-  var df = [];
-
-  for (let i = 0; i < st.length; i++) {
-    if (i === 0 && st[i] !== 0) df.push(st[i]);
-    else df.push(st[i] - (st[i - 1] || 0) - 1);
-  }
-
-  return Math.max(...df);
+  return Math.max(...st.map((x, i) =>
+    i === 0 && x !== 0 ? x : x - (st[i - 1] || 0) - 1,
+  ));
 };
 
 // Test cases
