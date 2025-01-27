@@ -15,7 +15,7 @@ Explanation: merged array = [1,2,3,4] and median is (2 + 3) / 2 = 2.5.")
     vec
     (let [m (- (/ (count vec) 2) 1)]
       (if (not= (rem (count vec) 2) 0)
-        [(get vec (+ m 1))]
+        [(get vec (int (Math/floor (+ m 1))))]
         [(get vec m) (get vec (+ m 1))]))))
 
 (defn sort-vectors [vec1 vec2]
@@ -27,10 +27,8 @@ Explanation: merged array = [1,2,3,4] and median is (2 + 3) / 2 = 2.5.")
       (get middle 0)
       (/ (+ (get middle 0) (get middle 1)) 2))))
 
-(assert (= (get-median [1, 2] [3, 4]) 2.5))
+(assert (= (get-median [1, 2] [3, 4]) 5/2))
 (assert (= (get-median [1, 3] [2]) 2))
 (assert (= (get-median [1, 3] []) 2))
 (assert (= (get-median [] [3]) 3))
-(assert (= (get-median [4, 6, 7] [3 8 9]) 6.5))
-
-
+(assert (= (get-median [4, 6, 7] [3 8 9]) 13/2))

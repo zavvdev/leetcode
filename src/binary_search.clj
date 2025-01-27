@@ -6,7 +6,7 @@
   ([target sorted-vec left right]
    (if (< right left)
      -1
-     (let [mid-index (Math/floor (/ (+ left right) 2))
+     (let [mid-index (int (Math/floor (/ (+ left right) 2)))
            mid-value (get sorted-vec mid-index)]
        (cond
          (= mid-value target) mid-index
