@@ -6,14 +6,13 @@
 (ns phone-letter-combinations
   (:require [clojure.string :as string]))
 
+(defn combine-each [key values]
+  (into [] (map #(str key %) values)))
+
+(defn get-combine-reducer [combine-values]
+  (fn [carry key] (into carry (combine-each key combine-values))))
+
 (defn letter-combinations [digits]
-
-  (defn combine-each [key values]
-    (into [] (map #(str key %) values)))
-
-  (defn get-combine-reducer [combine-values]
-    (fn [carry key] (into carry (combine-each key combine-values))))
-
   (let [letter-map {"2" ["a" "b" "c"]
                     "3" ["d" "e" "f"]
                     "4" ["g" "h" "i"]
@@ -22,19 +21,19 @@
                     "7" ["p" "q" "r" "s"]
                     "8" ["t" "u" "v"]
                     "9" ["w" "x" "y" "z"]}
-        split-digits (string/split digits "")
+        split-digits (string/split digits #"")
         letters (into [] (map (fn [digit] (letter-map digit)) split-digits))
         result (atom [])]
     (if (= (count letters) 1)
       (get letters 0)
       (do
-        (swap! result (fn [&] (get letters 0)))
+        (swap! result (fn [_] (get letters 0)))
         (loop [i 1]
           (if (<= i (dec (count letters)))
             (do
               (swap!
                result
-               (fn [&] (reduce
+               (fn [_] (reduce
                         (get-combine-reducer (get letters i))
                         []
                         @result)))

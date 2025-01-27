@@ -20,8 +20,8 @@ Given a roman numeral, convert it to an integer.
   (:require [clojure.string :as string]))
 
 (defn roman-to-int [roman-string]
-  (let [symbols-map {"I" 1 "V" 5 "X" 10 "L" 50
-                     "C" 100 "D" 500 "M" 1000}
+  (let [symbols-map {"I" 1, "V" 5, "X" 10, "L" 50,
+                     "C" 100, "D" 500, "M" 1000}
         special-combinations-map {"IV" "IIII"
                                   "IX" "VIIII"
                                   "XL" "XXXX"
@@ -29,11 +29,15 @@ Given a roman numeral, convert it to an integer.
                                   "CD" "CCCC"
                                   "CM" "DCCCC"}
         without-specials (reduce-kv
-                          (fn [r k v] (string/replace r k v))
+                          (fn [r k v] (string/replace r (re-pattern k) v))
                           roman-string
                           special-combinations-map)]
-    (reduce (fn [r v] (+ r (get symbols-map v))) 0 without-specials)))
+    (reduce (fn [r v]
+              (+ r (get symbols-map (str v))))
+            0
+            without-specials)))
 
+(assert (= (roman-to-int "V") 5))
 (assert (= (roman-to-int "III") 3))
 (assert (= (roman-to-int "LVIII") 58))
 (assert (= (roman-to-int "MCMXCIV") 1994))

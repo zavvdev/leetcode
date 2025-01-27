@@ -11,12 +11,13 @@ Explanation: Because nums[0] + nums[1] == 9, we return [0, 1]")
 
 (ns two-sum)
 
+(defn get-pair-index [nums target index]
+  (let [r (.indexOf nums (- target (get nums index)))]
+    (condp = r
+      index -1
+      r)))
+
 (defn two-sum [nums, target]
-  (defn get-pair-index [i]
-    (let [r (.indexOf nums (- target (get nums i)))]
-      (condp = r
-        i -1
-        r)))
   (let [x (atom -1) y (atom -1)]
     (loop [i 0]
       (if (and (not= @x -1) (not= @y -1))
@@ -24,8 +25,8 @@ Explanation: Because nums[0] + nums[1] == 9, we return [0, 1]")
         (if (= i (count nums))
           nil
           (do
-            (swap! x (fn [&] i))
-            (swap! y (fn [&] (get-pair-index i)))
+            (swap! x (fn [_] i))
+            (swap! y (fn [_] (get-pair-index nums target i)))
             (recur (inc i))))))))
 
 (assert (= (two-sum [2, 7, 11, 15] 9) [0, 1]))
