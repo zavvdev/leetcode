@@ -15,7 +15,7 @@ Output: 'fl'")
   (get (into [] (sort #(compare (count %1) (count %2)) words)) 0))
 
 (defn has-prefix? [words prefix]
-  (= (count (filter #(string/starts-with? %1 prefix) words))
+  (= (count (filter #(string/starts-with? %1 (str prefix)) words))
      (count words)))
 
 (defn get-longest-prefix [words]
